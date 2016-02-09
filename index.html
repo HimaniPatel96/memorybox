@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      var _player = null;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId: 'vTIIMJ9tUc8',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+
+      function onPlayerReady(e) {
+        //e.target.playVideo();
+        _player = e.target;
+      }
+
+      function onPlayerStateChange(e) {
+        console.log(e);
+      }
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://localhost:5000');
+      socket.on('state', function (data) {
+        console.log(data);
+        if (data) {
+	  _player.playVideo();
+        }
+	else {
+          _player.pauseVideo();
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div id="player"></div>
+  </body>
+</html>
