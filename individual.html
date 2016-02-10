@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var threshold = 15;
+
+      var socket = io.connect('http://localhost:5001');
+      socket.on('pindata', function (data) {
+        data.forEach(function (value, index) {
+
+          var element = document.querySelector('#pin' + index);
+          if (value > threshold) {
+            element.classList.add('on');
+          }
+          else {
+            element.classList.remove('on');
+          }
+
+          document.querySelector('#pin' + index + ' > span').textContent = value;
+        });
+      });
+
+      socket.on('state', function (data) {
+        var audio = document.querySelector('#pin' + data.pin + ' audio');
+        if (data.state) {
+          audio.play();
+        }
+        else {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+
+      socket.on('settings', function (settings) {
+        threshold = settings.threshold || threshold;
+      });
+    </script>
+    <style>
+      div.on {
+        background-color: lightgreen;
+      }
+    </style>
+  </head>
+  <body>
+
+
+    <div id="pin0">
+      <audio preload="auto" controls loop>
+        <source type="audio/mp3" src="assets/story1.MP3"></source>
+      </audio>
+      Pin 0: <span></span>
+    </div>
+    <div id="pin1">
+      <audio preload="auto" controls loop>
+        <source type="audio/mp3" src="assets/story2.MP3"></source>
+      </audio>
+      Pin 1: <span></span>
+    </div>
+    <div id="pin2">
+      <audio preload="auto" controls loop>
+        <source type="audio/mp3" src="assets/story3.MP3"></source>
+      </audio>
+      Pin 2: <span></span>
+    </div>
+    <div id="pin3">
+      <audio preload="auto" controls loop>
+        <source type="audio/mp3" src="assets/story4.MP3"></source>
+      </audio>
+      Pin 3: <span></span>
+    </div>
+    <div id="pin4">
+      <audio preload="auto" controls loop>
+        <source type="audio/mp3" src="assets/story5.MP3"></source>
+      </audio>
+      Pin 4: <span></span>
+    </div>
+  </body>
+</html>
